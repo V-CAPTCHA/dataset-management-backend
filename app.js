@@ -15,7 +15,7 @@ const verifyToken = require('./middleware/authentication.middleware');
 const app = express();
 app.use(express.json());
 app.disable('x-powered-by')
-
+app.use(express.urlencoded({ extended: true }));
 //CORS
 const corsOptions = {
   origin: process.env.APP_URL
@@ -27,7 +27,7 @@ app.use('/api', authentication);
 app.use('/api/users', verifyToken, users);
 app.use('/api/keys', verifyToken, keys);
 app.use('/api/dashboard', verifyToken, dashboard);
-app.use('/api/dataset', dataset); //disable verifyToken for testing purposes
+app.use('/api/dataset', dataset); //disable verifyToken for dev purposes
 
 
 module.exports = app;
