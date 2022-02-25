@@ -8,13 +8,11 @@
 */
 
 const router = require('express').Router();
-const { nanoid } = require('nanoid');
-const moment = require('moment');
-const { body, validationResult } = require('express-validator');
 var fs = require('fs');
 
 // import multer for upload file to server
 const multer = require('multer');
+/* This is to upload file to server. */
 const upload = multer({ dest: 'uploads/' });
 const cpUpload = upload.single('dataset_image_upload');
 
@@ -40,6 +38,7 @@ router.get('/', async (req, res) => {
     return res.status(200).json({ 'message': 'Dataset does not exist' });
   }
 
+/* This is to return data to client. */
   res.status(200).json({
     'message': 'get all dataset successfully',
     'data': rows,
@@ -73,6 +72,7 @@ router.get('/:dataset_id', async (req, res) => {
     return res.status(400).json({ 'message': 'dataset does not exist' });
   }
 
+/* This is to return data to client. */
   res.status(200).json({
     'message': 'get dataset successfully',
     'data': dataset_data,
@@ -91,6 +91,7 @@ router.post('/', cpUpload, async (req, res) => {
     return res.status(404).json({ 'message': 'some fields is required' });
   }
 
+/* This is checking file type. If file type is not valid, return 404. */
   if (
     req.file.mimetype !== 'image/jpeg' ||
     req.file.mimetype !== 'image/png' ||
@@ -102,6 +103,8 @@ router.post('/', cpUpload, async (req, res) => {
   const dataset_question = req.body.dataset_question;
   const dataset_reply = req.body.dataset_reply;
   const admin_id = req.body.admin_id;
+
+/* This is to rename the file name. */
   const dataset_image_file =
     req.file.filename + '.' + req.file.originalname.split('.')[1];
 
@@ -117,9 +120,11 @@ router.post('/', cpUpload, async (req, res) => {
     admin_id: admin_id,
   });
 
+/* This is to return message to client. */
   res.status(200).json({
     'message': 'create dataset successfully',
   });
+/* This is to rename the file name. */
   const oldPath = 'uploads/' + req.file.filename;
   const newPath = process.env.DATASET_IMG_PATH + dataset_image_file;
   fs.rename(oldPath, newPath, function (err) {});
@@ -132,6 +137,7 @@ router.patch('/:dataset_id', cpUpload, async (req, res) => {
     return res.status(404).json({ 'message': 'image file is required' });
   }
 
+/* This is checking file type. If file type is not valid, return 404. */
   if (
     req.file.mimetype !== 'image/jpeg' ||
     req.file.mimetype !== 'image/png' ||
@@ -143,6 +149,7 @@ router.patch('/:dataset_id', cpUpload, async (req, res) => {
   const dataset_id = req.params.dataset_id;
   const new_dataset_question = req.body.new_dataset_question;
   const new_dataset_reply = req.body.new_dataset_reply;
+/* This is to rename the file name. */
   const dataset_image_file =
     req.file.filename + '.' + req.file.originalname.split('.')[1];
 
@@ -172,9 +179,11 @@ router.patch('/:dataset_id', cpUpload, async (req, res) => {
       }
     );
   } catch (err) {
+    /* This is to return error message to client. */
     res.status(400).json({ 'message': 'error dataset cannot update' });
   }
 
+/* This is to return message to client. */
   res.status(200).json({
     'message': 'edit dataset successfully',
   });
@@ -198,6 +207,7 @@ router.delete('/:dataset_id', async (req, res) => {
 
   //Check exist key
   if (!dataset_id_qeury) {
+    /* This is to return error message to client. */
     return res.status(400).json({ 'message': 'dataset_id does not exist' });
   }
 
@@ -208,6 +218,7 @@ router.delete('/:dataset_id', async (req, res) => {
     },
   });
 
+/* This is to return message to client. */
   res.status(200).json({
     'message': 'delete key successfully',
   });
