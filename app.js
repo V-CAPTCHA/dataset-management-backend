@@ -7,7 +7,7 @@ const authentication = require('./routes/authentication.routes');
 const users = require('./routes/users.routes');
 const keys = require('./routes/keys.routes');
 const dashboard = require('./routes/dashboard.routes');
-
+const dataset = require('./routes/dataset.routes');
 //middleware
 const verifyToken = require('./middleware/authentication.middleware');
 
@@ -27,6 +27,7 @@ app.use('/api', authentication);
 app.use('/api/users', verifyToken, users);
 app.use('/api/keys', verifyToken, keys);
 app.use('/api/dashboard', verifyToken, dashboard);
+app.use('/api/dataset', dataset); //disable verifyToken for testing purposes
 
 
 module.exports = app;
