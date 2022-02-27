@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Sequelize = require('sequelize');
 const { body, validationResult } = require('express-validator');
 const { nanoid } = require('nanoid');
+
 
 //Use sequelize model
 const db = require('../config/database.config');
@@ -11,6 +13,41 @@ const Admin = db.admin;
 
 //Mailer
 const transporter = require('../config/mailer.config');
+
+
+//Get all admin
+router.get('/', async(req, res) => {
+  //Check admin role
+  const creator_id = res.locals.admin.admin_id;
+  const creator = await Admin.findOne({ where: { admin_id: creator_id }});
+  if (creator.role !== "super" || !creator)
+    return res.status(400).json({ "message": "Only super admin can get admin information" })
+
+  //Find and count all admin in database
+  const {count, rows} = await Admin.findAndCountAll({
+    attributes: [
+      'admin_id',
+      'email',
+      'first_name',
+      'last_name'
+    ],
+    where: {
+      role: {
+        [Sequelize.Op.not]: 'super'
+      }
+    }
+  })
+
+  //Check exist key
+  if(!count) {
+    return res.status(200).json({"message": "admin does not exist"});
+  }
+  
+  res.status(200).json({
+    "message": "get all admin successfully",
+    "data": rows
+  })
+})
 
 
 //Create admin API
