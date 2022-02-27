@@ -15,6 +15,7 @@ const { body, validationResult } = require('express-validator');
 //Use sequelize model
 const db = require('../config/database.config');
 const User = db.user;
+const Admin = db.admin;
 
 
 //Mailer
@@ -40,20 +41,20 @@ async (req, res) => {
     return res.status(400).json({ "message": "information is required" })
 
 
-  //Check exist user
-  const user = await User.findOne({ where: { email: email }});
-  if (!user)
-    return res.status(400).json({"message": "user does not exist "})
+  //Check exist admin
+  const admin = await Admin.findOne({ where: { email: email }});
+  if (!admin)
+    return res.status(400).json({"message": "admin does not exist "})
 
   //Compare password
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, admin.password);
 
   //Correct password
   if(isMatch) {
     const token = jwt.sign(
-      { user_id: user.user_id },  //payload
-      process.env.SECRET_KEY,     //secret key
-      { expiresIn: "7d" }         //expired
+      { admin_id: admin.user_id },  //payload
+      process.env.SECRET_KEY,       //secret key
+      { expiresIn: "1d" }           //expired
     );
 
     res.status(200).json({
