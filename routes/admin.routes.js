@@ -146,4 +146,48 @@ async (req, res) => {
 })
 
 
+//Edit admin information
+router.patch('/', 
+  body('first_name').isLength({ min: 2, max: 50 }),
+  body('last_name').isLength({ min: 2, max: 50 }),
+async(req, res) => {
+  //Validation
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const admin_id = res.locals.admin.admin_id;
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
+
+  //Check null information
+  if (!first_name || !last_name) {
+    return res.status(400).json({"message": "information is required"});
+  }
+
+  //Find an admin in db
+  const admin = await Admin.findOne({ 
+    where: { admin_id: admin_id }
+  });
+
+  //Check exist admin
+  if (!admin)
+    return res.status(400).json({"message": "admin does not exist "});
+
+  //Update admin
+  await Admin.update(
+    {  
+      first_name: first_name,
+      last_name: last_name,
+    },
+    { where: { admin_id: admin_id }}
+  );
+  
+  res.status(200).json({
+    "message": "change first name and last name successfully"
+  })
+})
+
+
 module.exports = router;
