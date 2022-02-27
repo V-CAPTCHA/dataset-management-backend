@@ -190,4 +190,56 @@ async(req, res) => {
 })
 
 
+//Change admin password
+router.put('/password', 
+  body('current_password').isLength({ min: 8, max: 50 }),
+  body('new_password').isLength({ min: 8, max: 50 }),
+async(req, res) => {
+  //Validation
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const current_password = req.body.current_password;
+  const new_password = req.body.new_password;
+  const admin_id = res.locals.admin.admin_id;
+
+  //Check null password 
+  if(!current_password || !new_password) {
+    return res.status(400).json({ "message": "password is required" })
+  }
+
+  //Find an admin in db
+  const admin = await Admin.findOne({ 
+    where: { admin_id: admin_id }
+  });
+
+  //Check exist admin
+  if(!admin)
+    return res.status(400).json({"message": "admin does not exist "});
+
+  //Compare password
+  const isMatch = await bcrypt.compare(current_password, admin.password);
+
+  //Correct password
+  if(isMatch) {
+    //New password hashing
+    const hashNewPassword = await bcrypt.hash(new_password, 8);
+
+    //Change password
+    await Admin.update({ password: hashNewPassword },
+      { where : { admin_id: admin_id }}
+    );
+
+    res.status(200).json({"message": "change password successfully"})
+  }  
+
+  //Incorrect password
+  else {
+    res.status(401).json({"message": "incorrect current password"});
+  }
+})
+
+
 module.exports = router;
