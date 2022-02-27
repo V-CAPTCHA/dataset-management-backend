@@ -13,9 +13,9 @@ const Admin = db.admin;
 const transporter = require('../config/mailer.config');
 
 
-//Create admin
+//Create admin API
 router.post('/', 
-  body('email').isLength({ min: 2, max: 50 }),
+  body('email').isEmail(), 
   body('first_name').isLength({ min: 2, max: 50 }),
   body('last_name').isLength({ min: 2, max: 50 }),
 async (req, res) => {
@@ -24,6 +24,12 @@ async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+
+  //Check admin role
+  const creator_id = res.locals.admin.admin_id;
+  const creator = await Admin.findOne({ where: { admin_id: creator_id }});
+  if (creator.role !== "super" || !creator)
+    return res.status(400).json({ "message": "Only super admin can create admin" })
   
   const email = req.body.email;
   const password = nanoid();
