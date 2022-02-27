@@ -15,8 +15,8 @@ const Admin = db.admin;
 const transporter = require('../config/mailer.config');
 
 
-//Get all admin
-router.get('/', async(req, res) => {
+//Get all admin information API
+router.get('/all', async(req, res) => {
   //Check admin role
   const creator_id = res.locals.admin.admin_id;
   const creator = await Admin.findOne({ where: { admin_id: creator_id }});
@@ -38,7 +38,7 @@ router.get('/', async(req, res) => {
     }
   })
 
-  //Check exist key
+  //Check exist admin
   if(!count) {
     return res.status(200).json({"message": "admin does not exist"});
   }
@@ -47,6 +47,35 @@ router.get('/', async(req, res) => {
     "message": "get all admin successfully",
     "data": rows
   })
+})
+
+
+//Get admin information by id API
+router.get('/', async(req, res) => {
+  const admin_id = res.locals.admin.admin_id;
+
+  //Find an admin in database
+  const admin = await Admin.findOne({
+    attributes: [
+      'admin_id',
+      'email',
+      'first_name',
+      'last_name',
+    ],
+    where: { 
+      admin_id: admin_id,
+    }
+  });
+
+  //Check exist admin
+  if(!admin) {
+    return res.status(400).json({"message": "admin does not exist"});
+  }
+
+  res.status(200).json({
+    "message": "get admin successfully",
+    "data": admin
+  });
 })
 
 
