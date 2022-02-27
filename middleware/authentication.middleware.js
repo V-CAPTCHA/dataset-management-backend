@@ -7,14 +7,14 @@ const verifyToken = (req, res, next) => {
   //If has token in headers
   if(token) {
     //Verify token
-    jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    jwt.verify(token, process.env.SECRET_KEY, (err, admin) => {
       //Invalid token
       if (err) {
         return res.status(403).json({'message': 'invalid token'})
       }
 
       //Set user info to res.locals
-      res.locals.user = user;
+      res.locals.admin = admin;
 
       //Next function after token checked
       return next();

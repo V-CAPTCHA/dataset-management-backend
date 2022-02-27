@@ -47,9 +47,9 @@ async (req, res) => {
   //Correct password
   if(isMatch) {
     const token = jwt.sign(
-      { admin_id: admin.user_id },  //payload
-      process.env.SECRET_KEY,       //secret key
-      { expiresIn: "1d" }           //expired
+      { admin_id: admin.admin_id },  //payload
+      process.env.SECRET_KEY,        //secret key
+      { expiresIn: "1d" }            //expired
     );
 
     res.status(200).json({
