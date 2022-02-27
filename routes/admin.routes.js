@@ -2,7 +2,7 @@ const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 const { nanoid } = require('nanoid');
 
 
@@ -15,7 +15,7 @@ const Admin = db.admin;
 const transporter = require('../config/mailer.config');
 
 
-//Get all admin information API
+//Get all admin information API **super admin
 router.get('/all', async(req, res) => {
   //Check admin role
   const creator_id = res.locals.admin.admin_id;
@@ -79,7 +79,7 @@ router.get('/', async(req, res) => {
 })
 
 
-//Create admin API
+//Create admin API **super admin
 router.post('/', 
   body('email').isEmail(), 
   body('first_name').isLength({ min: 2, max: 50 }),
@@ -146,7 +146,7 @@ async (req, res) => {
 })
 
 
-//Edit admin information
+//Edit admin information API
 router.patch('/', 
   body('first_name').isLength({ min: 2, max: 50 }),
   body('last_name').isLength({ min: 2, max: 50 }),
@@ -190,7 +190,7 @@ async(req, res) => {
 })
 
 
-//Change admin password
+//Change admin password API
 router.put('/password', 
   body('current_password').isLength({ min: 8, max: 50 }),
   body('new_password').isLength({ min: 8, max: 50 }),
@@ -239,6 +239,46 @@ async(req, res) => {
   else {
     res.status(401).json({"message": "incorrect current password"});
   }
+})
+
+
+//Delete admin API **super admin
+router.delete('/:admin_id', 
+  param('admin_id').isInt(),
+async(req, res) => {
+  //Validation
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  
+  const admin_id = req.params.admin_id;
+
+  //Check admin role
+  const deleter_id = res.locals.admin.admin_id;
+  const deleter = await Admin.findOne({ where: { admin_id: deleter_id }});
+  if (deleter.role !== "super" || !deleter)
+    return res.status(400).json({ "message": "Only super admin can delete admin" })
+
+  //Find an admin in db
+  const admin = await Admin.findOne({ 
+    where: { admin_id: admin_id }
+  });
+
+  //Check exist admin
+  if (!admin)
+    return res.status(400).json({"message": "admin does not exist "});
+
+  //Delete admin
+  await Admin.destroy({
+    where: {
+      admin_id: admin.admin_id
+    }
+  });
+
+  res.status(200).json({
+    "message": "delete admin successfully"
+  });
 })
 
 
