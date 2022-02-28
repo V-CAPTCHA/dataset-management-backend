@@ -107,6 +107,57 @@ async(req, res) => {
   res.status(200).json({
     "message": "change user information successfully"
   })
-}) 
+})
+
+
+//Activate and Deactivate user API
+router.put('/status/:user_id', 
+  param('user_id').isInt(),
+async(req, res) => {
+  const user_id = req.params.user_id;
+
+  //Find user in database
+  const user = await User.findOne({ 
+    where: { user_id: user_id }
+  });
+
+  //Check exist user
+  if(!user) {
+    return res.status(400).json({"message": "user does not exist"});
+  }
+
+  //Check old state
+  let oldEmail = user.email;
+  let isActivate = oldEmail.split('::').length === 1;
+
+  //Change to deactivate
+  if(isActivate) {
+    const newEmail = user.email + "::deactivate";
+
+    await User.update({
+      email: newEmail
+    },
+    { where: { user_id: user_id }})
+  
+    res.status(200).json({
+      "message": "user has deactivated"
+    });
+  }
+
+  //Change to activate
+  else {
+    const newEmail = oldEmail.split('::')[0];
+
+    await User.update({
+      email: newEmail
+    },
+    { where: { user_id: user_id }})
+  
+    res.status(200).json({
+      "message": "user has activate"
+    });
+  }
+})
+
 
 module.exports = router;
