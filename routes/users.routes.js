@@ -6,7 +6,7 @@ const { body, param, validationResult } = require('express-validator');
 //Use sequelize model
 const db = require('../config/database.config');
 const User = db.user;
-const Admin = db.admin;
+const CaptchaKey = db.captcha_key;
 
 
 //Get all user API
@@ -158,6 +158,39 @@ async(req, res) => {
     });
   }
 })
+
+
+//Delete account API
+router.delete('/:user_id', async (req, res) => {
+  const user_id = req.params.user_id;
+
+  //Find user in db
+  const user = await User.findOne({ 
+    where: { user_id: user_id }
+  });
+
+  //Check exist user
+  if (!user)
+    return res.status(400).json({"message": "user does not exist "});
+
+  //Delete captcha_key of user
+  await CaptchaKey.destroy({
+    where: {
+      user_id: user_id
+    }
+  });
+
+  //Delete user
+  await User.destroy({
+    where: {
+      user_id: user_id
+    }
+  });
+
+  res.status(200).json({
+    "message": "delete user successfully"
+  });
+});
 
 
 module.exports = router;
