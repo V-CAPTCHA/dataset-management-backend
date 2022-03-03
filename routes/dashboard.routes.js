@@ -15,11 +15,16 @@ const { Op } = require('sequelize')
 const db = require('../config/database.config');
 const CaptchaKey = db.captcha_key;
 const AuthenAction = db.authen_action;
+const Admin = db.admin;
 
 
 //Total request API
 router.get('/total-request', async (req, res) => {
-  const user_id = res.locals.user.user_id;
+  //Check admin role
+  const admin_id = res.locals.admin.admin_id;
+  const admin = await Admin.findOne({ where: { admin_id: admin_id }});
+  if (admin.role !== "super" || !admin)
+    return res.status(400).json({ "message": "Only super admin can get admin dashboard" });
 
   //Define return data
   var total_request = 0;
@@ -29,7 +34,6 @@ router.get('/total-request', async (req, res) => {
   await AuthenAction.findAndCountAll({
     include: {
       model: CaptchaKey,
-      where: { user_id: user_id }
     }
   }).then((result) => {
     total_request = result.count
@@ -47,9 +51,6 @@ router.get('/total-request', async (req, res) => {
       ),
       include: {
         model: CaptchaKey,
-        where: {
-          user_id: user_id
-        }
       }
 
     }).then((result) => {
@@ -67,7 +68,11 @@ router.get('/total-request', async (req, res) => {
 
 //Valid request API
 router.get('/valid-request', async (req, res) => {
-  const user_id = res.locals.user.user_id;
+  //Check admin role
+  const admin_id = res.locals.admin.admin_id;
+  const admin = await Admin.findOne({ where: { admin_id: admin_id }});
+  if (admin.role !== "super" || !admin)
+    return res.status(400).json({ "message": "Only super admin can get admin dashboard" });
 
   //Define return data
   var total_request = 0;
@@ -78,7 +83,6 @@ router.get('/valid-request', async (req, res) => {
   await AuthenAction.findAndCountAll({
     include: {
       model: CaptchaKey,
-      where: { user_id: user_id }
     }
   }).then((result) => {
     total_request = result.count;
@@ -89,7 +93,6 @@ router.get('/valid-request', async (req, res) => {
     where: { action_valid: 'PASSES' },
     include: {
       model: CaptchaKey,
-      where: { user_id: user_id }
     }
   }).then((result) => {
     //Calculate percentage
@@ -118,9 +121,6 @@ router.get('/valid-request', async (req, res) => {
       },      
       include: {
         model: CaptchaKey,
-        where: {
-          user_id: user_id
-        }
       }
     }).then((result) => {
       valid_request_per_day.push(result.count);
@@ -137,7 +137,11 @@ router.get('/valid-request', async (req, res) => {
 
 //Invalid request API
 router.get('/invalid-request', async (req, res) => {
-  const user_id = res.locals.user.user_id;
+  //Check admin role
+  const admin_id = res.locals.admin.admin_id;
+  const admin = await Admin.findOne({ where: { admin_id: admin_id }});
+  if (admin.role !== "super" || !admin)
+    return res.status(400).json({ "message": "Only super admin can get admin dashboard" });
 
   //Define return data
   var total_request = 0;
@@ -148,7 +152,6 @@ router.get('/invalid-request', async (req, res) => {
   await AuthenAction.findAndCountAll({
     include: {
       model: CaptchaKey,
-      where: { user_id: user_id }
     }
   }).then((result) => {
     total_request = result.count;
@@ -159,7 +162,6 @@ router.get('/invalid-request', async (req, res) => {
     where: { action_valid: 'WRONG' },
     include: {
       model: CaptchaKey,
-      where: { user_id: user_id }
     }
   }).then((result) => {
     //Calculate percentage
@@ -188,9 +190,6 @@ router.get('/invalid-request', async (req, res) => {
       },      
       include: {
         model: CaptchaKey,
-        where: {
-          user_id: user_id
-        }
       }
     })
     .then((result) => {
