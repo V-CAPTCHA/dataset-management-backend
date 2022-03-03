@@ -6,6 +6,7 @@ const cors = require('cors')
 const authentication = require('./routes/authentication.routes');
 const dashboard = require('./routes/dashboard.routes');
 const admin = require('./routes/admin.routes');
+const user = require('./routes/users.routes');
 
 //middleware
 const verifyToken = require('./middleware/authentication.middleware');
@@ -25,6 +26,7 @@ app.use(cors(corsOptions))
 app.use('/api', authentication);
 app.use('/api/dashboard', verifyToken, dashboard);
 app.use('/api/admin',verifyToken, admin);
+app.use('/api/users', verifyToken, user);
 
 
 module.exports = app;
