@@ -9,9 +9,11 @@ tags:
   - name: User Part
     description: API for user management
   - name: Dashboard Part
-    description: API for user management
+    description: API for Dashboard management
   - name: Authentucate Part
-    description: API for user management
+    description: API for Authentucate management
+  - name: Admin Part
+    description: API for Admin management
 paths:
 
 #----------------------------dataset path------------------------------------
@@ -354,3 +356,121 @@ paths:
           required: true
           type: string
           example: '{"email": "test@gmail.com","password": "string"}'
+
+#--------------------admin part------------------
+
+  /api/admin/all:
+    get:
+      tags:
+        - Admin Part
+      summary: Returns all admin.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: ID of admin
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
+  /api/admin:
+    post:
+      tags:
+        - Admin Part
+      summary: create admin
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin
+          in: body
+          description: email & first_name & last_name for create admin
+          required: true
+          type: string
+          example: '{"email": "test@gmail.com","first_name": "string","last_name": "string"}'
+      
+  /api/admin/:
+    patch:
+      tags:
+        - Admin Part
+      summary: edit admin
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin
+          in: body
+          description: email & first_name & last_name for edit admin
+          required: true
+          type: string
+          example: '{"first_name": "string","last_name": "string"}'
+  /api/admin/{admin_id}:
+    delete:
+      tags:
+        - Admin Part
+      summary: delete admin
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: admin id for delete admin
+          required: true
+          type: integer
+
+  /api/admin/password:
+    patch:
+      tags:
+        - Admin Part
+      summary: change password admin
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: password
+          in: body
+          description: current_password & new_password
+          required: true
+          type: string
+          example: '{"current_password": "new_password","last_name": "string"}'
+
