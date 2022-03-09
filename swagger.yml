@@ -221,8 +221,47 @@ paths:
           description: last_name to edit
           required: true
           type: string
+    put:
+      tags:
+        - User Part
+      summary: activate for deactivation user from user id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: ID of user
+          required: true
+          type: integer
+          example: 1
+          format: int64
 
-
+    delete:
+      tags:
+        - User Part
+      summary: delete user from user id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: ID of user
+          required: true
+          type: integer
+          example: 1
+          format: int64
           
 
 
