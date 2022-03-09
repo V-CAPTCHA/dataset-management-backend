@@ -27,7 +27,7 @@ app.use('/api', authentication);
 app.use('/api/users', verifyToken, users);
 app.use('/api/keys', verifyToken, keys);
 app.use('/api/dashboard', verifyToken, dashboard);
-app.use('/api/dataset', dataset); //disable verifyToken for dev purposes
+app.use('/api/dataset',verifyToken, dataset);  
 
 
 module.exports = app;
