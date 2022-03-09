@@ -23,7 +23,7 @@ app.use(cors(corsOptions))
 //Router
 app.use('/api', authentication);
 app.use('/api/dashboard', verifyToken, dashboard);
-app.use('/api/dataset',verifyToken, dataset);  
+app.use('/api/dataset', dataset); //disable verifyToken for dev purposes
 
 
 module.exports = app;
