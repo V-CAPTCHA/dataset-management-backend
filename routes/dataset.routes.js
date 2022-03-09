@@ -92,13 +92,13 @@ router.post('/', cpUpload, async (req, res) => {
   }
 
 /* This is checking file type. If file type is not valid, return 404. */
-  if (
-    req.file.mimetype !== 'image/jpeg' ||
-    req.file.mimetype !== 'image/png' ||
-    req.file.mimetype !== 'image/gif'
-  ) {
-    return res.status(404).json({ 'message': 'file type is not valid' });
-  }
+if (
+  !((req.file.mimetype == 'image/jpeg') ||
+  (req.file.mimetype == 'image/png') ||
+  (req.file.mimetype == 'image/gif'))
+) {
+  return res.status(404).json({ 'message': 'file type is not valid' });
+}
 
   const dataset_question = req.body.dataset_question;
   const dataset_reply = req.body.dataset_reply;
