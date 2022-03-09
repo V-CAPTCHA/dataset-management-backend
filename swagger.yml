@@ -164,7 +164,27 @@ paths:
           type: string
           required: true
 
-
+  /api/users/{user_id}:
+    get:
+      tags:
+        - User Part
+      summary: Returns user record from user id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: ID of user to return
+          required: true
+          type: integer
+          example: 1
+          format: int64
 
           
 
