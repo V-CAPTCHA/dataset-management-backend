@@ -289,6 +289,28 @@ paths:
           example: 1
           format: int64
 
+  /api/dashboard/valid-request:
+    get:
+      tags:
+        - Dashboard Part
+      summary: Returns valid request from dashboard.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: ID of admin 
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
 
 
           
