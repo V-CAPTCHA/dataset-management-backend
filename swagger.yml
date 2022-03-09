@@ -10,6 +10,8 @@ tags:
     description: API for user management
   - name: Dashboard Part
     description: API for user management
+  - name: Authentucate Part
+    description: API for user management
 paths:
 
 #----------------------------dataset path------------------------------------
@@ -333,4 +335,22 @@ paths:
           example: 1
           format: int64
 
-          
+#--------------------authentication part------------------
+
+  /api/login:
+    post:
+      tags:
+        - Authentucate Part
+      summary: login
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - name: email
+          in: body
+          description: email & password for login
+          required: true
+          type: string
+          example: '{"email": "test@gmail.com","password": "string"}'
