@@ -6,7 +6,12 @@ info:
 tags:
   - name: Dataset Part
     description: API for Dataset management
+  - name: User Part
+    description: API for user management
 paths:
+
+#----------------------------dataset path------------------------------------
+
   /api/dataset:
     parameters:
     - in: header
@@ -140,6 +145,24 @@ paths:
           example: 1
           format: int64
 
+
+
+#-------------------user path ----------------
+
+  /api/users:
+    get:
+      tags:
+        - User Part
+      summary: Returns all users record from database.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+          type: string
+          required: true
 
 
 
