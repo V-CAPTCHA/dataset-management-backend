@@ -99,26 +99,47 @@ paths:
 
 
   /api/dataset/{dataset_id}:
-    parameters:
-    - in: header
-      name: x-access-token
-      schema:
-        type: string
-      required: true
-    - name: dataset_id
-      in: path
-      description: ID of dataset to return
-      required: true
-      type: integer
-      example: 1
-      format: int64
     get:
       tags:
         - Dataset Part
-      summary: Returns dataset record from dataset id.
+      summary: Returns or delete dataset record from dataset id.
       responses: 
         '200':
           description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: dataset_id
+          in: path
+          description: ID of dataset to return
+          required: true
+          type: integer
+          example: 1
+          format: int64
+    delete:
+      tags:
+        - Dataset Part
+      summary: delete dataset record from dataset id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: dataset_id
+          in: path
+          description: ID of dataset to delete
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
 
 
 
