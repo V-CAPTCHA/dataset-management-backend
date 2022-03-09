@@ -23,6 +23,13 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
+//swagger
+const yaml = require('js-yaml');
+const fs   = require('fs');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = yaml.load(fs.readFileSync('./swagger.yml', 'utf8'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 //Router
 app.use('/api', authentication);
 app.use('/api/dashboard', verifyToken, dashboard);

@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: Dataset management backend API
+  description: this is Swagger for the Dataset management backend
+  version: 1.0
+servers:
+  - url: http://127.0.0.1:3000/api
+    description: development server
+tags:
+  - name: Dataset Part
+    description: API for Dataset management
+paths:
+  /dataset:
+    parameters:
+    - in: header
+      name: x-access-token
+      schema:
+        type: string
+      required: true
+    get:
+      tags:
+        - Dataset Part
+      summary: Returns all dataset record from database.
+      responses: 
+        '200':
+          description: OK
+
+
+
+
+          
