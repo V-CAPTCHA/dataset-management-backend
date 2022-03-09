@@ -1,16 +1,13 @@
-openapi: 3.0.0
+swagger: '2.0'
 info:
   title: Dataset management backend API
   description: this is Swagger for the Dataset management backend
   version: 1.0
-servers:
-  - url: http://127.0.0.1:3000/api
-    description: development server
 tags:
   - name: Dataset Part
     description: API for Dataset management
 paths:
-  /dataset:
+  /api/dataset:
     parameters:
     - in: header
       name: x-access-token
@@ -26,7 +23,7 @@ paths:
           description: OK
 
 
-  /dataset/{dataset_id}:
+  /api/dataset/{dataset_id}:
     parameters:
     - in: header
       name: x-access-token
@@ -47,6 +44,49 @@ paths:
       responses: 
         '200':
           description: OK
+
+  /api/dataset/:
+    post:
+      tags:
+        - Dataset Part
+      summary: creates dataset record
+      description: 'creates dataset record'
+      operationId: uploadFile
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: dataset_question
+          in: formData
+          description: dataset question for create dataset
+          required: true
+          type: string
+        - name: dataset_reply
+          in: formData
+          description: dataset reply for create dataset
+          required: true
+          type: string
+        - name: admin_id
+          in: formData
+          description: admin id who creates dataset record
+          required: true
+          type: integer
+        - name: dataset_image_upload
+          in: formData
+          description: file to upload
+          required: false
+          type: file
+      responses:
+        '200':
+          description: OK
+
+          
 
 
           
