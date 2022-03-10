@@ -220,7 +220,7 @@ router.delete('/:dataset_id', async (req, res) => {
 
 /* This is to return message to client. */
   res.status(200).json({
-    'message': 'delete key successfully',
+    'message': 'delete dataset successfully',
   });
 });
 
