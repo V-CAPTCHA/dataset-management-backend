@@ -85,11 +85,12 @@ router.post('/', cpUpload, async (req, res) => {
   if (
     !req.file ||
     !req.body.dataset_question ||
-    !req.body.dataset_reply ||
-    !req.body.admin_id
+    !req.body.dataset_reply
   ) {
     return res.status(404).json({ 'message': 'some fields is required' });
   }
+
+  console.log(res.locals)
 
 /* This is checking file type. If file type is not valid, return 404. */
 if (
@@ -102,7 +103,7 @@ if (
 
   const dataset_question = req.body.dataset_question;
   const dataset_reply = req.body.dataset_reply;
-  const admin_id = req.body.admin_id;
+  const admin_id = res.locals.admin.admin_id;
 
 /* This is to rename the file name. */
   const dataset_image_file =
