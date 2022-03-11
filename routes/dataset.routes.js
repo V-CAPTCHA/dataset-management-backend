@@ -139,13 +139,13 @@ router.patch('/:dataset_id', cpUpload, async (req, res) => {
   }
 
 /* This is checking file type. If file type is not valid, return 404. */
-  if (
-    req.file.mimetype !== 'image/jpeg' ||
-    req.file.mimetype !== 'image/png' ||
-    req.file.mimetype !== 'image/gif'
-  ) {
-    return res.status(404).json({ 'message': 'file type is not valid' });
-  }
+if (
+  !((req.file.mimetype == 'image/jpeg') ||
+  (req.file.mimetype == 'image/png') ||
+  (req.file.mimetype == 'image/gif'))
+) {
+  return res.status(404).json({ 'message': 'file type is not valid' });
+}
 
   const dataset_id = req.params.dataset_id;
   const new_dataset_question = req.body.new_dataset_question;
