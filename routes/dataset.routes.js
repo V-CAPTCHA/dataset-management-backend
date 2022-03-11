@@ -90,8 +90,6 @@ router.post('/', cpUpload, async (req, res) => {
     return res.status(404).json({ 'message': 'some fields is required' });
   }
 
-  console.log(res.locals)
-
 /* This is checking file type. If file type is not valid, return 404. */
 if (
   !((req.file.mimetype == 'image/jpeg') ||
@@ -134,25 +132,25 @@ if (
 //Edit dataset API
 router.patch('/:dataset_id', cpUpload, async (req, res) => {
   //Validation for upload file
-  if (!req.file) {
-    return res.status(404).json({ 'message': 'image file is required' });
+  var dataset_image_file = ''
+  if (req.file) {
+    if (
+      !((req.file.mimetype == 'image/jpeg') ||
+      (req.file.mimetype == 'image/png') ||
+      (req.file.mimetype == 'image/gif'))
+    ) {
+      return res.status(404).json({ 'message': 'file type is not valid' });
+    }
+    dataset_image_file = req.file.filename + '.' + req.file.originalname.split('.')[1];
   }
 
 /* This is checking file type. If file type is not valid, return 404. */
-if (
-  !((req.file.mimetype == 'image/jpeg') ||
-  (req.file.mimetype == 'image/png') ||
-  (req.file.mimetype == 'image/gif'))
-) {
-  return res.status(404).json({ 'message': 'file type is not valid' });
-}
 
   const dataset_id = req.params.dataset_id;
   const new_dataset_question = req.body.new_dataset_question;
   const new_dataset_reply = req.body.new_dataset_reply;
 /* This is to rename the file name. */
-  const dataset_image_file =
-    req.file.filename + '.' + req.file.originalname.split('.')[1];
+
 
   //Find dataset_id in db
   const dataset_id_qeury = await dataset.findOne({
@@ -188,11 +186,12 @@ if (
   res.status(200).json({
     'message': 'edit dataset successfully',
   });
-
+  if (req.file) {
   //Delete temp image file and move to process.env.DATASET_IMG_PATH
   const oldPath = 'uploads/' + req.file.filename;
   const newPath = process.env.DATASET_IMG_PATH + dataset_image_file;
   fs.rename(oldPath, newPath, function (err) {});
+  }
 });
 
 //Delete key API
