@@ -1,0 +1,476 @@
+swagger: '2.0'
+info:
+  title: Dataset management backend API
+  description: this is Swagger for the Dataset management backend
+  version: 1.0
+tags:
+  - name: Dataset Part
+    description: API for Dataset management
+  - name: User Part
+    description: API for user management
+  - name: Dashboard Part
+    description: API for Dashboard management
+  - name: Authentucate Part
+    description: API for Authentucate management
+  - name: Admin Part
+    description: API for Admin management
+paths:
+
+#----------------------------dataset path------------------------------------
+
+  /api/dataset:
+    parameters:
+    - in: header
+      name: x-access-token
+      schema:
+        type: string
+      required: true
+    get:
+      tags:
+        - Dataset Part
+      summary: Returns all dataset record from database.
+      responses: 
+        '200':
+          description: OK
+
+    post:
+      tags:
+        - Dataset Part
+      summary: creates dataset record
+      description: 'creates dataset record'
+      operationId: uploadFile
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: dataset_question
+          in: formData
+          description: dataset question for create dataset
+          required: true
+          type: string
+        - name: dataset_reply
+          in: formData
+          description: dataset reply for create dataset
+          required: true
+          type: string
+        - name: admin_id
+          in: formData
+          description: admin id who creates dataset record
+          required: true
+          type: integer
+        - name: dataset_image_upload
+          in: formData
+          description: file to upload
+          required: false
+          type: file
+      responses:
+        '200':
+          description: OK
+
+    patch:
+      tags:
+        - Dataset Part
+      summary: Edit dataset
+      description: 'Edit dataset record'
+      operationId: uploadFile
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: dataset_question
+          in: formData
+          description: dataset question for create dataset
+          required: true
+          type: string
+        - name: dataset_reply
+          in: formData
+          description: dataset reply for create dataset
+          required: true
+          type: string
+        - name: dataset_image_upload
+          in: formData
+          description: file to upload
+          required: false
+          type: file
+      responses:
+        '200':
+          description: OK
+
+
+  /api/dataset/{dataset_id}:
+    get:
+      tags:
+        - Dataset Part
+      summary: Returns or delete dataset record from dataset id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: dataset_id
+          in: path
+          description: ID of dataset to return
+          required: true
+          type: integer
+          example: 1
+          format: int64
+    delete:
+      tags:
+        - Dataset Part
+      summary: delete dataset record from dataset id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: dataset_id
+          in: path
+          description: ID of dataset to delete
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
+
+
+#-------------------user path ----------------
+
+  /api/users:
+    get:
+      tags:
+        - User Part
+      summary: Returns all users record from database.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+          type: string
+          required: true
+
+  /api/users/{user_id}:
+    get:
+      tags:
+        - User Part
+      summary: Returns user record from user id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: ID of user to return
+          required: true
+          type: integer
+          example: 1
+          format: int64
+    patch:
+      tags:
+        - User Part
+      summary: edite user record from user id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: ID of user to edit
+          required: true
+          type: integer
+          example: 1
+          format: int64
+        - name: email
+          in: path
+          description: Email to edit
+          required: true
+          type: string
+          format: email
+        - name: first_name
+          in: path
+          description: first_name to edit
+          required: true
+          type: string
+        - name: last_name
+          in: path
+          description: last_name to edit
+          required: true
+          type: string
+    put:
+      tags:
+        - User Part
+      summary: activate for deactivation user from user id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: ID of user
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
+    delete:
+      tags:
+        - User Part
+      summary: delete user from user id.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: user_id
+          in: path
+          description: ID of user
+          required: true
+          type: integer
+          example: 1
+          format: int64
+          
+#-------------------Dashboard path ----------------
+
+  /api/dashboard/total-request:
+    get:
+      tags:
+        - Dashboard Part
+      summary: Returns total request from dashboard.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: ID of admin
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
+  /api/dashboard/valid-request:
+    get:
+      tags:
+        - Dashboard Part
+      summary: Returns valid request from dashboard.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: ID of admin 
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
+  /api/dashboard/invalid-request:
+    get:
+      tags:
+        - Dashboard Part
+      summary: Returns invalid request from dashboard.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: ID of admin 
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
+#--------------------authentication part------------------
+
+  /api/login:
+    post:
+      tags:
+        - Authentucate Part
+      summary: login
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - name: email
+          in: body
+          description: email & password for login
+          required: true
+          type: string
+          example: '{"email": "test@gmail.com","password": "string"}'
+
+#--------------------admin part------------------
+
+  /api/admin/all:
+    get:
+      tags:
+        - Admin Part
+      summary: Returns all admin.
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: ID of admin
+          required: true
+          type: integer
+          example: 1
+          format: int64
+
+  /api/admin:
+    post:
+      tags:
+        - Admin Part
+      summary: create admin
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin
+          in: body
+          description: email & first_name & last_name for create admin
+          required: true
+          type: string
+          example: '{"email": "test@gmail.com","first_name": "string","last_name": "string"}'
+      
+  /api/admin/:
+    patch:
+      tags:
+        - Admin Part
+      summary: edit admin
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin
+          in: body
+          description: email & first_name & last_name for edit admin
+          required: true
+          type: string
+          example: '{"first_name": "string","last_name": "string"}'
+  /api/admin/{admin_id}:
+    delete:
+      tags:
+        - Admin Part
+      summary: delete admin
+      responses: 
+        '200':
+          description: OK
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: admin_id
+          in: path
+          description: admin id for delete admin
+          required: true
+          type: integer
+
+  /api/admin/password:
+    patch:
+      tags:
+        - Admin Part
+      summary: change password admin
+      responses: 
+        '200':
+          description: OK
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          required: true
+        - name: password
+          in: body
+          description: current_password & new_password
+          required: true
+          type: string
+          example: '{"current_password": "new_password","last_name": "string"}'
+
