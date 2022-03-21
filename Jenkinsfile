@@ -28,8 +28,8 @@ pipeline {
         }
                 stage('Docker Build') {
             steps {
-                
-                sh 'docker build . -t dataset_management_backend'
+                sh 'mkdir uploads'
+                sh 'docker build . -t dataset_management_backend' 
             }
         }
                 stage('Docker Deploy') {
