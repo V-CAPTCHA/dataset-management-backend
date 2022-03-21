@@ -142,6 +142,19 @@ router.patch('/:dataset_id', cpUpload, async (req, res) => {
       return res.status(404).json({ 'message': 'file type is not valid' });
     }
     dataset_image_file = req.file.filename + '.' + req.file.originalname.split('.')[1];
+  }else{
+      //Find key in database
+  const dataset_data = await dataset.findOne({
+    attributes: [
+      'dataset_img',
+    ],
+    where: {
+      dataset_id: req.params.dataset_id,
+    },
+  });
+
+  dataset_image_file = dataset_data.dataset_img;
+
   }
 
 /* This is checking file type. If file type is not valid, return 404. */
