@@ -35,7 +35,7 @@ pipeline {
                 stage('Docker Deploy') {
             steps {
                 
-                sh 'docker run -p 5000:3000/tcp --restart=always -d --name dataset_management_backend dataset_management_backend:latest'
+                sh 'docker run -p 5000:3000/tcp --restart=always --mount type=bind,source=/var/lib/jenkins/workspace/Database_Auto_deploy/imgstore,target=/app/uploads -d --name dataset_management_backend dataset_management_backend:latest'
             }
         }
     }
