@@ -123,7 +123,10 @@ if (
   res.status(200).json({
     'message': 'create dataset successfully',
   });
-
+/* This is to rename the file name. */
+  const oldPath = 'uploads/' + req.file.filename;
+  const newPath = 'uploads/' + dataset_image_file;
+  fs.rename(oldPath, newPath, function (err) {});
 });
 
 //Edit dataset API
@@ -183,6 +186,12 @@ router.patch('/:dataset_id', cpUpload, async (req, res) => {
   res.status(200).json({
     'message': 'edit dataset successfully',
   });
+  if (req.file) {
+  //Delete temp image file and move to process.env.DATASET_IMG_PATH
+  const oldPath = 'uploads/' + req.file.filename;
+  const newPath = 'uploads/' + dataset_image_file;
+  fs.rename(oldPath, newPath, function (err) {});
+  }
 });
 
 //Delete key API
